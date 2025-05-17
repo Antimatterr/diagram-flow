@@ -16,5 +16,31 @@ export default defineConfig([
     extends: ["js/recommended"],
   },
   tseslint.configs.recommended,
-  pluginReact.configs.flat.recommended,
+  // Override React plugin configs
+  {
+    files: ["**/*.{jsx,tsx}"],
+    plugins: {
+      react: pluginReact,
+    },
+    languageOptions: {
+      parserOptions: {
+        ecmaFeatures: {
+          jsx: true
+        }
+      },
+      globals: {
+        ...globals.browser,
+        React: "readonly" // Make React available globally
+      }
+    },
+    settings: {
+      react: {
+        version: "detect" // Automatically detect React version
+      }
+    },
+    rules: {
+      // Turn off the rule requiring React import
+      "react/react-in-jsx-scope": "off",
+    },
+  }
 ]);

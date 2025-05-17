@@ -2,7 +2,7 @@ import { CanvasStateProvider } from "./state/canvasStateProvider";
 import "./App.css";
 import Canvas from "./Canvas";
 import { Toolbar } from "./Components/Toolbar";
-function App() {
+export const App = () => {
   return (
     <CanvasStateProvider>
       <div className="app-container">
@@ -13,6 +13,4 @@ function App() {
       </div>
     </CanvasStateProvider>
   );
-}
-
-export default App;
+};

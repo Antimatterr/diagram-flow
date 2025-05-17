@@ -105,10 +105,6 @@ export type CanvasAction =
   | { type: "SET_SELECTION"; payload: string[] }
   | { type: "CLEAR_SELECTION" }
   | {
-      type: "UPDATE_SHAPE_PROPERTY";
-      payload: { id: string; property: keyof Shape; value: any };
-    }
-  | {
       type: "UPDATE_CURRENT_STYLE";
       payload: Partial<{
         color: string;

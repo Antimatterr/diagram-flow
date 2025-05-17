@@ -26,6 +26,7 @@ export const INITIAL_STATE: CanvasState = {
 // We use JSON.parse(JSON.stringify()) for a simple deep clone.
 // For very complex state, consider a more robust deep cloning method or Immer
 const createStateSnapshot = (state: CanvasState): CanvasStateSnapshot => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { history, historyIndex, ...snapshot } = state;
   return JSON.parse(JSON.stringify(snapshot));
 };
@@ -56,23 +57,25 @@ export const canvasReducer = (
   state: CanvasState,
   action: CanvasAction
 ): CanvasState => {
-  let nextState = { ...state };
+  const nextState = { ...state };
 
   switch (action.type) {
-    case "ADD_SHAPE":
+    case "ADD_SHAPE": {
       const newShapeWithId: Shape = { ...action.payload, id: uuid() };
       nextState.shapes = [...state.shapes, newShapeWithId];
       nextState.selectedShapeIds = [newShapeWithId.id];
       return addStateToHistory(nextState);
-    case "UPDATE_SHAPE":
+    }
+    case "UPDATE_SHAPE": {
       //find shape by id and merge them
       nextState.shapes = state.shapes.map((shape) =>
         shape.id === action.payload.id
-          ? { ...shape, ...(action.payload.updates as any) }
+          ? ({ ...shape, ...action.payload.updates } as Shape)
           : shape
       );
       return addStateToHistory(nextState);
-    case "DELETE_SHAPES":
+    }
+    case "DELETE_SHAPES": {
       nextState.shapes = state.shapes.filter(
         (shape) => !action.payload.includes(shape.id)
       );
@@ -80,14 +83,17 @@ export const canvasReducer = (
         (id) => !action.payload.includes(id)
       );
       return addStateToHistory(nextState);
-    case "SET_ACTIVE_TOOL":
+    }
+    case "SET_ACTIVE_TOOL": {
       nextState.activeTool = action.payload;
       nextState.selectedShapeIds = [];
       return nextState;
-    case "SET_SELECTION":
+    }
+    case "SET_SELECTION": {
       nextState.selectedShapeIds = action.payload;
       return nextState;
-    case "UPDATE_CURRENT_STYLE":
+    }
+    case "UPDATE_CURRENT_STYLE": {
       return {
         ...state,
         currentStrokeColor: action.payload.color ?? state.currentStrokeColor,
@@ -96,7 +102,8 @@ export const canvasReducer = (
         currentStrokeStyle:
           action.payload.strokeStyle ?? state.currentStrokeStyle,
       };
-    case "UNDO":
+    }
+    case "UNDO": {
       if (state.historyIndex > 0) {
         const prevIndex = state.historyIndex - 1;
         const restoredStateData = state.history[prevIndex];
@@ -107,7 +114,8 @@ export const canvasReducer = (
         };
       }
       return state;
-    case "REDO":
+    }
+    case "REDO": {
       if (state.historyIndex < state.history.length - 1) {
         const nextIndex = state.historyIndex + 1;
         const restoredStateData = state.history[nextIndex];
@@ -118,24 +126,29 @@ export const canvasReducer = (
         };
       }
       return state;
-    case "SET_ZOOM":
+    }
+    case "SET_ZOOM": {
       return {
         ...state,
         zoomLevel: action.payload,
       };
-    case "SET_PAN_OFFSET":
+    }
+    case "SET_PAN_OFFSET": {
       return {
         ...state,
         panOffset: action.payload,
       };
-    case "SET_CANVAS_SIZE":
+    }
+    case "SET_CANVAS_SIZE": {
       return {
         ...state,
         canvasHeight: action.payload.height,
         canvasWidth: action.payload.width,
       };
-    case "RESET_CANVAS":
+    }
+    case "RESET_CANVAS": {
       return INITIAL_STATE;
+    }
     default:
       return state;
   }

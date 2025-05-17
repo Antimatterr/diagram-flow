@@ -71,7 +71,7 @@ const Canvas: React.FC = () => {
             .slice(1)
             .forEach((point) => ctx.lineTo(point.x, point.y));
           ctx.stroke();
-          ctx.setTransform;
+          ctx.setTransform();
         }
       }
     });
