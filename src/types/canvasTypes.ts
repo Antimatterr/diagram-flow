@@ -26,6 +26,7 @@ export interface BaseShape {
   color: string;
   strokeWidth: number;
   strokeStyle: StrokeStyle;
+  isComplete: boolean;
 }
 
 export interface RectangleShape extends BaseShape {
@@ -67,7 +68,6 @@ export interface Point {
 export interface FreehandShape extends BaseShape {
   type: "freehand";
   points: Point[];
-  isComplete: boolean; // to check between active and finished stroke
 }
 
 export type Shape =

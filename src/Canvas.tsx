@@ -1,30 +1,7 @@
 // src/components/Canvas.tsx
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { useCanvasState } from "./state/canvasStateContext";
-
-// Define proper types for our shapes
-type Point = {
-  x: number;
-  y: number;
-};
-
-// Base Shape interface that all shapes must implement
-interface Shape {
-  type: string;
-  id: string;
-  x: number;
-  y: number;
-  isComplete: boolean;
-  color: string;
-  strokeWidth: number;
-  strokeStyle: string;
-}
-
-// Specific FreehandShape type
-interface FreehandShape extends Shape {
-  type: "freehand";
-  points: Point[];
-}
+import { Point } from "./types/canvasTypes";
 
 // Helper function to get pointer position relative to canvas
 const getCanvasCoords = (
@@ -81,7 +58,7 @@ const Canvas: React.FC = () => {
     // Draw completed shapes
     state.shapes.forEach((shape) => {
       if (shape.type === "freehand") {
-        const freehandShape = shape as FreehandShape;
+        const freehandShape = shape;
         if (freehandShape.points && freehandShape.points.length > 1) {
           ctx.beginPath();
           ctx.strokeStyle = shape.color;
@@ -94,6 +71,7 @@ const Canvas: React.FC = () => {
             .slice(1)
             .forEach((point) => ctx.lineTo(point.x, point.y));
           ctx.stroke();
+          ctx.setTransform;
         }
       }
     });
@@ -127,7 +105,6 @@ const Canvas: React.FC = () => {
     drawCanvas();
   }, [drawCanvas]);
 
-  // Event handlers with proper memoization
   const handlePointerDown = useCallback(
     (e: React.PointerEvent<HTMLCanvasElement>) => {
       if (!canvasRef.current) return;
@@ -202,7 +179,6 @@ const Canvas: React.FC = () => {
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
       onPointerLeave={handlePointerUp} // Treat pointer leave as pointer up
-      style={{ touchAction: "none" }} // Prevent default touch actions
     />
   );
 };

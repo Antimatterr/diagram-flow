@@ -24,7 +24,6 @@ export const Toolbar: React.FC<ToolbarProps> = () => {
   const { state, dispatch } = useCanvasState();
 
   const handleCanvasActions = (action: Actions) => {
-    console.log("selected", action);
     dispatch({ type: "SET_ACTIVE_TOOL", payload: action });
   };
 
